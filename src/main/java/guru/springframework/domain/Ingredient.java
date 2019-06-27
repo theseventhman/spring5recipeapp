@@ -11,6 +11,11 @@ public class Ingredient {
         this.recipe = recipe;
     }
 
+    public Ingredient()
+    {
+
+    }
+
     public UnitOfMeasure getUom() {
         return uom;
     }
