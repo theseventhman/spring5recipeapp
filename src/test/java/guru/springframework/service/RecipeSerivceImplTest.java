@@ -1,16 +1,14 @@
 package guru.springframework.service;
 
+import guru.springframework.converters.RecipeCommandToRecipe;
+import guru.springframework.converters.RecipeToRecipeCommand;
 import guru.springframework.domain.Recipe;
 import guru.springframework.repositories.RecipeRepository;
-import javafx.beans.binding.When;
-import org.h2.command.dml.MergeUsing;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.internal.verification.Times;
 
-import javax.swing.text.html.Option;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -25,11 +23,17 @@ public class RecipeSerivceImplTest {
 
     @Mock
     RecipeRepository recipeRepository;
+    @Mock
+    RecipeCommandToRecipe recipeCommandToRecipe;
+    @Mock
+    RecipeToRecipeCommand recipeToRecipeCommand;
+
+
     @Before
     public void setUp() throws Exception{
         MockitoAnnotations.initMocks(this);
 
-        recipeSerivce = new RecipeSerivceImpl(recipeRepository);
+        recipeSerivce = new RecipeSerivceImpl(recipeRepository, recipeCommandToRecipe, recipeToRecipeCommand);
     }
 
 
@@ -58,6 +62,16 @@ public class RecipeSerivceImplTest {
         assertNotNull("Null recipe returned",recipeReturned);
         verify(recipeRepository,times(1)).findById(anyLong());
         verify(recipeRepository,never()).findAll();
+
+    }
+    @Test
+    public void testDeleteRecipeById() throws  Exception
+    {
+       Long idToDelete = Long.valueOf(2L);
+
+       recipeSerivce.deleteById(idToDelete);
+
+       verify(recipeRepository, times(1)).deleteById(anyLong());
 
     }
 }
